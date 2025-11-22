@@ -1,5 +1,6 @@
 #![doc = include_str!("../README.md")]
 #![warn(missing_docs)]
+extern crate core;
 
 use std::cell::RefCell;
 use std::rc::Rc;
@@ -16,6 +17,7 @@ pub mod avatar;
 pub mod calendar;
 pub mod checkbox;
 pub mod collapsible;
+pub mod combo_box;
 pub mod context_menu;
 pub mod date_picker;
 pub mod dialog;

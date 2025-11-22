@@ -65,6 +65,7 @@ examples!(
     calendar[simple, internationalized, range, unavailable_dates],
     checkbox,
     collapsible,
+    combo_box,
     context_menu,
     date_picker,
     dialog,

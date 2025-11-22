@@ -1,3 +1,4 @@
+use std::backtrace::Backtrace;
 use std::rc::Rc;
 
 use dioxus::prelude::*;
@@ -36,6 +37,7 @@ pub(crate) fn use_focus_entry_disabled(
     use_effect(move || {
         if disabled.cloned() {
             if item.cloned() {
+                tracing::debug!("use_focus_entry_disabled -> use_effect");
                 ctx.remove_item(index.cloned());
                 item.set(false);
             }
@@ -46,6 +48,7 @@ pub(crate) fn use_focus_entry_disabled(
     });
     use_effect_cleanup(move || {
         if item.cloned() {
+            tracing::debug!("use_focus_entry_disabled -> use_effect_cleanup");
             ctx.remove_item(index.cloned());
         }
     });
@@ -101,6 +104,7 @@ pub(crate) struct FocusState {
 
 impl FocusState {
     pub(crate) fn set_focus(&mut self, index: Option<usize>) {
+        tracing::debug!("Setting focus to {:?}", index);
         if let Some(idx) = index {
             self.recent_focus.set(Some(idx));
         }
@@ -146,6 +150,7 @@ impl FocusState {
     }
 
     pub(crate) fn blur(&mut self) {
+        tracing::debug!("Blurring focus");
         self.set_focus(None);
     }
 
@@ -178,6 +183,7 @@ impl FocusState {
     }
 
     pub(crate) fn remove_item(&mut self, index: usize) {
+        tracing::debug!("Removing item at index {}", index);
         self.item_count -= 1;
         if (self.current_focus)() == Some(index) {
             self.set_focus(None);

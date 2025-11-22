@@ -68,7 +68,7 @@
 
 // Internal modules
 mod components;
-mod context;
+pub(crate) mod context;
 pub(crate) mod text_search;
 
 // Re-export all public components and types

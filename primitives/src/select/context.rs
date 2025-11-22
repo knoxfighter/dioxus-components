@@ -145,7 +145,7 @@ impl SelectContext {
 }
 
 /// State for individual select options
-pub(super) struct OptionState {
+pub(crate) struct OptionState {
     /// Tab index for focus management
     pub tab_index: usize,
     /// The value of the option

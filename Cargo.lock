@@ -8855,6 +8855,31 @@ dependencies = [
 
 [[package]]
 name = "wgpu"
+version = "0.19.4"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "cbd7311dbd2abcfebaabf1841a2824ed7c8be443a0f29166e5d3c6a53a762c01"
+dependencies = [
+ "arrayvec",
+ "cfg-if",
+ "cfg_aliases 0.1.1",
+ "js-sys",
+ "log",
+ "naga 0.19.2",
+ "parking_lot",
+ "profiling",
+ "raw-window-handle 0.6.2",
+ "smallvec",
+ "static_assertions",
+ "wasm-bindgen",
+ "wasm-bindgen-futures",
+ "web-sys",
+ "wgpu-core 0.19.4",
+ "wgpu-hal 0.19.5",
+ "wgpu-types 0.19.2",
+]
+
+[[package]]
+name = "wgpu"
 version = "26.0.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "70b6ff82bbf6e9206828e1a3178e851f8c20f1c9028e74dd3a8090741ccd5798"

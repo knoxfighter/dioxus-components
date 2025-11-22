@@ -1,0 +1,13 @@
+{
+  "name": "combo_box",
+  "description": "A combo box component with typeahead support. This is a work in progress. Please check back soon for updates.",
+  "authors": ["knox"],
+  "exclude": ["variants", "docs.md", "component.json"],
+  "cargoDependencies": [
+    {
+      "name": "dioxus-primitives",
+      "git": "https://github.com/DioxusLabs/components"
+    }
+  ],
+  "globalAssets": ["../../../assets/dx-components-theme.css"]
+}

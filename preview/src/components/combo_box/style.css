@@ -1,0 +1,145 @@
+.combo-box {
+  position: relative;
+}
+
+.combo-box-trigger {
+  display: flex;
+  align-items: center;
+}
+
+.combo-box-input {
+  font-size: 14px;
+  position: relative;
+  padding: 8px 32px 8px 12px;
+  border: 1px solid var(--light, var(--primary-color-6))
+    var(--dark, var(--primary-color-7));
+  border-radius: calc(0.5rem);
+  background: var(--light, var(--primary-color))
+    var(--dark, var(--primary-color-3));
+  color: var(--secondary-color-4);
+  transition: background-color 100ms ease-out;
+  outline: none;
+}
+
+.combo-box-expand-icon {
+  position: absolute;
+  right: 12px;
+  width: 20px;
+  height: 20px;
+  fill: none;
+  stroke: var(--primary-color-7);
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 2;
+}
+
+.combo-box-check-icon {
+  width: 1rem;
+  height: 1rem;
+  fill: none;
+  stroke: var(--secondary-color-5);
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 2;
+}
+
+.combo-box[data-disabled="true"] .combo-box-input {
+  color: var(--secondary-color-5);
+  cursor: not-allowed;
+}
+
+.combo-box-input:hover:not([data-disabled="true"]),
+.combo-box-input:focus-visible {
+  background: var(--light, var(--primary-color-4))
+    var(--dark, var(--primary-color-5));
+  color: var(--secondary-color-1);
+  outline: none;
+}
+
+.combo-box-list {
+  position: absolute;
+  z-index: 1000;
+  top: 100%;
+  left: 0;
+  min-width: 100%;
+  box-sizing: border-box;
+  padding: 0.25rem;
+  border-radius: 0.5rem;
+  margin-top: 0.25rem;
+  background: var(--light, var(--primary-color))
+    var(--dark, var(--primary-color-5));
+  box-shadow: inset 0 0 0 1px var(--light, var(--primary-color-6))
+    var(--dark, var(--primary-color-7));
+  opacity: 0;
+  pointer-events: none;
+  transform-origin: top;
+  will-change: transform, opacity;
+}
+
+.combo-box-list[data-state="closed"] {
+  animation: combo-box-list-animate-out 150ms ease-in forwards;
+  pointer-events: none;
+}
+
+@keyframes combo-box-list-animate-out {
+  0% {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+
+  100% {
+    opacity: 0;
+    transform: scale(0.95) translateY(-2px);
+  }
+}
+
+.combo-box-list[data-state="open"] {
+  animation: combo-box-list-animate-in 150ms ease-out forwards;
+  pointer-events: auto;
+}
+
+@keyframes combo-box-list-animate-in {
+  0% {
+    opacity: 0;
+    transform: scale(0.95) translateY(-2px);
+  }
+
+  100% {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+.combo-box-option {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 12px;
+  border-radius: calc(0.5rem - 0.25rem);
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.combo-box-option[data-disabled="true"] {
+  color: var(--secondary-color-5);
+  cursor: not-allowed;
+}
+
+.combo-box-option:hover:not([data-disabled="true"]),
+.combo-box-option.focus {
+  background: var(--light, var(--primary-color-4))
+    var(--dark, var(--primary-color-7));
+  color: var(--secondary-color-1);
+  outline: none;
+}
+
+.combo-box-group-label {
+  padding: 4px 12px;
+  color: var(--secondary-color-5);
+  font-size: 0.75rem;
+}
+
+[data-disabled="true"] {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
