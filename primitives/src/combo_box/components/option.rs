@@ -72,7 +72,6 @@ pub fn ComboBoxOption<T: Clone + PartialEq + 'static>(props: ComboBoxOptionProps
     });
 
     use_effect(move || {
-        tracing::debug!("Adding option with index {:?}", props.index.read());
         let option_state = OptionState {
             tab_index: index(),
             value: RcPartialEqValue::new(value.cloned()),
@@ -82,14 +81,12 @@ pub fn ComboBoxOption<T: Clone + PartialEq + 'static>(props: ComboBoxOptionProps
         context.options.write().push(option_state);
     });
     use_effect_cleanup(move || {
-        tracing::debug!("Removing option with index {:?}", props.index.read());
         context.options.write().retain(|opt| opt.id != *id.read());
     });
 
     let onmounted = use_focus_controlled_item(props.index);
     let focused = move || context.focus_state.is_focused(index());
     let selected = use_memo(move || {
-        tracing::debug!("Selected: {:?}", context.value.read().is_some());
         context.value.read().as_ref().and_then(|v| v.as_ref::<T>()) == Some(&props.value.read())
     });
 
@@ -132,7 +129,6 @@ pub fn ComboBoxOption<T: Clone + PartialEq + 'static>(props: ComboBoxOptionProps
                     event.stop_propagation();
                 },
                 onclick: move |event| {
-                    tracing::debug!("Option clicked");
                     if event.trigger_button() == Some(MouseButton::Primary) {
                         context.set_value.call(Some(RcPartialEqValue::new(props.value.cloned())));
                         context.search_input_value.set(text_value.read().clone());

@@ -35,6 +35,14 @@ pub fn ComboBoxList(props: ComboBoxListProps) -> Element {
         render: render.into(),
     });
 
+    use_effect(move || {
+       if render() {
+           context.focus_state.set_focus(context.initial_focus.cloned());
+       } else {
+           context.initial_focus.set(None);
+       }
+    });
+
     rsx! {
         if render() {
             div {

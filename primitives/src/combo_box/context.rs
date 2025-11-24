@@ -28,6 +28,27 @@ pub(crate) struct ComboBoxContext {
 
     /// The value of the search input
     pub search_input_value: Signal<String>,
+
+    /// The initial element to focus once the list is rendered
+    pub initial_focus: Signal<Option<usize>>,
+}
+
+impl ComboBoxContext {
+    /// Select the currently focused item
+    pub fn select_current_item(&mut self) {
+        // If the select is open, select the focused item
+        if self.open.cloned() {
+            if let Some(focused_index) = self.focus_state.current_focus() {
+                let options = self.options.read();
+                if let Some(option) = options.iter().find(|opt| opt.tab_index == focused_index) {
+                    self.set_value.call(Some(option.value.clone()));
+                    self.search_input_value.set(option.text_value.clone());
+                    self.focus_state.blur();
+                    self.open.set(false);
+                }
+            }
+        }
+    }
 }
 
 #[derive(Clone, Copy)]

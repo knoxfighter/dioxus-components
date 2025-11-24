@@ -65,8 +65,9 @@ pub fn ComboBox<T: Clone + PartialEq + 'static>(props: ComboBoxProps<T>) -> Elem
     });
     let options = use_signal(Vec::default);
     let search_input_value = use_signal(String::new);
+    let initial_focus = use_signal(|| None);
 
-    use_context_provider(|| ComboBoxContext {open, list_id, focus_state, value, set_value, search_input, options, search_input_value });
+    use_context_provider(|| ComboBoxContext {open, list_id, focus_state, value, set_value, search_input, options, search_input_value, initial_focus });
 
     rsx! {
         div {

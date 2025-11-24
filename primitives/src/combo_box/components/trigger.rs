@@ -42,7 +42,7 @@ pub struct ComboBoxTriggerInputProps {
 
 #[component]
 pub fn ComboBoxTriggerInput(props: ComboBoxTriggerInputProps) -> Element {
-    let context = use_context::<ComboBoxContext>();
+    let mut context = use_context::<ComboBoxContext>();
     let mut open = context.open;
     let mut search_input = context.search_input;
 
@@ -75,8 +75,6 @@ pub fn ComboBoxTriggerInput(props: ComboBoxTriggerInputProps) -> Element {
                 search_input.set(Some(element.data()));
             },
             onkeydown: move |event| {
-                tracing::info!("Keydown: {:?}", event);
-
                 let key = event.key();
                 let code = event.code();
 
@@ -84,21 +82,39 @@ pub fn ComboBoxTriggerInput(props: ComboBoxTriggerInputProps) -> Element {
                     Key::ArrowDown => {
                         if !open() {
                             open.set(true);
-                            focus_state.focus_first();
+                            context.initial_focus.set((context.focus_state.item_count() > 0).then_some(0));
+                        } else {
+                            context.focus_state.focus_next();
                         }
                     }
                     Key::ArrowUp => {
                         if !open() {
                             open.set(true);
-                            focus_state.focus_last();
+                            context.initial_focus.set(context.focus_state.item_count().checked_sub(1));
+                        } else {
+                            context.focus_state.focus_prev();
                         }
+                    }
+                    Key::Enter => {
+                        context.select_current_item();
+                        event.prevent_default();
+                        event.stop_propagation();
+                    }
+                    Key::Escape => {
+                        if open() {
+                            open.set(false);
+                        } else {
+                            value.set(selected_text_value().unwrap_or_default());
+                        }
+                        event.prevent_default();
+                        event.stop_propagation();
                     }
                     _ => {}
                 }
             },
             onblur: move |_| {
                 value.set(selected_text_value().unwrap_or_default());
-                // open.set(false);
+                open.set(false);
             },
             ..props.attributes,
         }
