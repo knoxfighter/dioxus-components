@@ -68,3 +68,10 @@ pub(super) struct ComboBoxOptionContext {
     /// Whether this option is currently selected
     pub selected: ReadSignal<bool>,
 }
+
+/// Context for select group components
+#[derive(Clone, Copy)]
+pub(super) struct ComboBoxGroupContext {
+    /// ID of the element that labels this group
+    pub labeled_by: Signal<Option<String>>,
+}

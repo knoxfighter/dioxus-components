@@ -73,10 +73,6 @@ pub fn ComboBox<T: Clone + PartialEq + 'static>(props: ComboBoxProps<T>) -> Elem
         div {
             "data-state": if open() { "open" } else { "closed" },
 
-            onmounted: move |e| async move {
-                tracing::info!("ComboBox mounted");
-            },
-
             // Pass through other attributes
             ..props.attributes,
 

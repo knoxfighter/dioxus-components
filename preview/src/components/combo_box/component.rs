@@ -1,6 +1,6 @@
 use dioxus::prelude::*;
 use dioxus_primitives::combo_box;
-use dioxus_primitives::combo_box::{ComboBoxListProps, ComboBoxOptionIndicatorProps, ComboBoxOptionProps, ComboBoxProps, ComboBoxTriggerInputProps, ComboBoxTriggerProps};
+use dioxus_primitives::combo_box::{ComboBoxGroupLabelProps, ComboBoxGroupProps, ComboBoxListProps, ComboBoxOptionIndicatorProps, ComboBoxOptionProps, ComboBoxProps, ComboBoxTriggerInputProps, ComboBoxTriggerProps};
 
 #[component]
 pub fn ComboBox<T: Clone + PartialEq + 'static>(props: ComboBoxProps<T>) -> Element {
@@ -74,5 +74,28 @@ pub fn ComboBoxOptionIndicator() -> Element {
                 path { d: "M5 13l4 4L19 7" }
             }
         }
+    }
+}
+
+#[component]
+pub fn ComboBoxGroup(props: ComboBoxGroupProps) -> Element {
+    rsx! {
+        combo_box::ComboBoxGroup {
+            class: "combo-box-group",
+            id: props.id,
+            attributes: props.attributes,
+            {props.children}
+        }
+    }
+}
+
+#[component]
+pub fn ComboBoxGroupLabel(props: ComboBoxGroupLabelProps) -> Element {
+    rsx! {
+        combo_box::ComboBoxGroupLabel {
+            class: "combo-box-group-label",
+            id: props.id,
+            attributes: props.attributes,
+            {props.children} }
     }
 }

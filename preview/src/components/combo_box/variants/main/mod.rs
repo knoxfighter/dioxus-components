@@ -1,6 +1,6 @@
 use dioxus::prelude::*;
-use strum::{EnumCount, IntoEnumIterator};
-use crate::components::combo_box::{ComboBoxList, ComboBoxOption, ComboBoxOptionIndicator, ComboBoxTrigger, ComboBoxTriggerIndicator, ComboBoxTriggerInput};
+use strum::{IntoEnumIterator};
+use crate::components::combo_box::{ComboBoxGroup, ComboBoxGroupLabel, ComboBoxList, ComboBoxOption, ComboBoxOptionIndicator, ComboBoxTrigger, ComboBoxTriggerIndicator, ComboBoxTriggerInput};
 use crate::components::combo_box::component::ComboBox;
 
 #[derive(Debug, Clone, Copy, PartialEq, strum::EnumCount, strum::EnumIter, strum::Display)]
@@ -26,14 +26,14 @@ impl Fruit {
 
 #[component]
 pub fn Demo() -> Element {
-    // let fruits = Fruit::iter().enumerate().map(|(i, f)| {
-    //     rsx! {
-    //         SelectOption::<Option<Fruit>> { index: i, value: f, text_value: "{f}",
-    //             {format!("{} {f}", f.emoji())}
-    //             SelectItemIndicator {}
-    //         }
-    //     }
-    // });
+    let fruits = Fruit::iter().enumerate().map(|(i, f)| {
+        rsx! {
+            ComboBoxOption::<Option<Fruit>> { index: i, value: f, text_value: "{f}",
+                {format!("{} {f}", f.emoji())}
+                ComboBoxOptionIndicator {}
+            }
+        }
+    });
 
     rsx! {
         ComboBox<Option<Fruit>> {
@@ -42,19 +42,22 @@ pub fn Demo() -> Element {
                 ComboBoxTriggerIndicator {}
             }
             ComboBoxList {
-                ComboBoxOption::<Option<Fruit>> {
-                    index: 0usize,
-                    value: Some(Fruit::Apple),
-                    text_value: Some("Apple".to_string()),
-                    "Apple"
-                    ComboBoxOptionIndicator {}
-                }
-                ComboBoxOption::<Option<Fruit>> {
-                    index: 1usize,
-                    value: Some(Fruit::Banana),
-                    text_value: Some("Banana".to_string()),
-                    "Banana"
-                    ComboBoxOptionIndicator {}
+                ComboBoxGroup {
+                    ComboBoxGroupLabel { "Fruits" }
+                    ComboBoxOption::<Option<Fruit>> {
+                        index: 0usize,
+                        value: Some(Fruit::Apple),
+                        text_value: Some("Apple".to_string()),
+                        "Apple"
+                        ComboBoxOptionIndicator {}
+                    }
+                    ComboBoxOption::<Option<Fruit>> {
+                        index: 1usize,
+                        value: Some(Fruit::Banana),
+                        text_value: Some("Banana".to_string()),
+                        "Banana"
+                        ComboBoxOptionIndicator {}
+                    }
                 }
             }
         }
