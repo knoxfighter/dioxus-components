@@ -71,6 +71,11 @@ pub fn ComboBoxOption<T: Clone + PartialEq + 'static>(props: ComboBoxOptionProps
         }
     });
 
+    let render = use_memo(move || {
+        let val = context.search_input_value.read().to_lowercase();
+        render() && text_value().to_lowercase().contains(&val)
+    });
+
     use_effect(move || {
         let option_state = OptionState {
             tab_index: index(),

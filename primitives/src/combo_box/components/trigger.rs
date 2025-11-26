@@ -60,7 +60,6 @@ pub fn ComboBoxTriggerInput(props: ComboBoxTriggerInputProps) -> Element {
     });
 
     let mut value = context.search_input_value;
-    let mut focus_state = context.focus_state;
 
     rsx! {
         input {
@@ -69,6 +68,10 @@ pub fn ComboBoxTriggerInput(props: ComboBoxTriggerInputProps) -> Element {
             value: value(),
             oninput: move |event| {
                 open.set(true);
+                let val = event.value();
+                if val.is_empty() {
+                    context.set_value.call(None);
+                }
                 value.set(event.value());
             },
             onmounted: move |element| {
@@ -115,6 +118,7 @@ pub fn ComboBoxTriggerInput(props: ComboBoxTriggerInputProps) -> Element {
             onblur: move |_| {
                 value.set(selected_text_value().unwrap_or_default());
                 open.set(false);
+                context.focus_state.blur();
             },
             ..props.attributes,
         }
