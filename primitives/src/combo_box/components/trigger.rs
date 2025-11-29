@@ -61,18 +61,26 @@ pub fn ComboBoxTriggerInput(props: ComboBoxTriggerInputProps) -> Element {
 
     let mut value = context.search_input_value;
 
+    let display_value = use_memo(move || {
+        if let Some(val) = value() {
+            val
+        } else {
+            selected_text_value().unwrap_or_default()
+        }
+    });
+
     rsx! {
         input {
             r#type: "text",
-            placeholder: "Search fruits",
-            value: value(),
+            placeholder: context.placeholder.cloned(),
+            value: display_value(),
             oninput: move |event| {
                 open.set(true);
                 let val = event.value();
                 if val.is_empty() {
                     context.set_value.call(None);
                 }
-                value.set(event.value());
+                value.set(Some(event.value()));
             },
             onmounted: move |element| {
                 search_input.set(Some(element.data()));
@@ -89,6 +97,8 @@ pub fn ComboBoxTriggerInput(props: ComboBoxTriggerInputProps) -> Element {
                         } else {
                             context.focus_state.focus_next();
                         }
+                        event.prevent_default();
+                        event.stop_propagation();
                     }
                     Key::ArrowUp => {
                         if !open() {
@@ -97,6 +107,8 @@ pub fn ComboBoxTriggerInput(props: ComboBoxTriggerInputProps) -> Element {
                         } else {
                             context.focus_state.focus_prev();
                         }
+                        event.prevent_default();
+                        event.stop_propagation();
                     }
                     Key::Enter => {
                         context.select_current_item();
@@ -107,16 +119,19 @@ pub fn ComboBoxTriggerInput(props: ComboBoxTriggerInputProps) -> Element {
                         if open() {
                             open.set(false);
                         } else {
-                            value.set(selected_text_value().unwrap_or_default());
+                            value.set(None);
                         }
                         event.prevent_default();
                         event.stop_propagation();
+                    }
+                    Key::Tab => {
+                        context.select_current_item();
                     }
                     _ => {}
                 }
             },
             onblur: move |_| {
-                value.set(selected_text_value().unwrap_or_default());
+                value.set(None);
                 open.set(false);
                 context.focus_state.blur();
             },

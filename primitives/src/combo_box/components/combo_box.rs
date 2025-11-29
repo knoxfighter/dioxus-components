@@ -1,9 +1,11 @@
 use std::any::{type_name, type_name_of_val};
 use std::rc::Rc;
+use dioxus::core::use_after_render;
+use dioxus::dioxus_core::queue_effect;
 use dioxus::prelude::*;
 use crate::combo_box::context::ComboBoxContext;
 use crate::focus::use_focus_provider;
-use crate::select::context::RcPartialEqValue;
+use crate::select::context::{OptionState, RcPartialEqValue};
 use crate::use_controlled;
 
 /// Props for the main ComboBox component
@@ -21,6 +23,14 @@ pub struct ComboBoxProps<T: Clone + PartialEq + 'static = String> {
     #[props(default)]
     pub on_value_change: Callback<Option<T>>,
 
+    /// Whether the combobox is disabled
+    #[props(default)]
+    pub disabled: ReadSignal<bool>,
+
+    /// Optional placeholder text
+    #[props(default = ReadSignal::new(Signal::new(String::from("Select an option"))))]
+    pub placeholder: ReadSignal<String>,
+
     /// Whether focus should loop around when reaching the end.
     #[props(default = ReadSignal::new(Signal::new(true)))]
     pub roving_loop: ReadSignal<bool>,
@@ -36,21 +46,18 @@ pub struct ComboBoxProps<T: Clone + PartialEq + 'static = String> {
 #[component]
 pub fn ComboBox<T: Clone + PartialEq + 'static>(props: ComboBoxProps<T>) -> Element {
     let (value, set_value_internal) =
-        use_controlled(props.value, props.default_value, props.on_value_change);
+        use_controlled(props.value, props.default_value.clone(), props.on_value_change);
 
     let open = use_signal(|| false);
     let list_id = use_signal(|| None);
     let focus_state = use_focus_provider(props.roving_loop);
 
-    let mut search_input: Signal<Option<Rc<MountedData>>> = use_signal(|| None);
+    let search_input: Signal<Option<Rc<MountedData>>> = use_signal(|| None);
 
     let value = use_memo(move || value().map(RcPartialEqValue::new));
     let set_value = use_callback(move |cursor_opt: Option<RcPartialEqValue>| {
         if let Some(value) = cursor_opt {
             // value
-            if let Some(search_input) = search_input() {
-
-            }
             set_value_internal.call(Some(
                 value
                     .as_ref::<T>()
@@ -64,10 +71,22 @@ pub fn ComboBox<T: Clone + PartialEq + 'static>(props: ComboBoxProps<T>) -> Elem
         }
     });
     let options = use_signal(Vec::default);
-    let search_input_value = use_signal(String::new);
+    let mut search_input_value = use_signal(|| None);
     let initial_focus = use_signal(|| None);
 
-    use_context_provider(|| ComboBoxContext {open, list_id, focus_state, value, set_value, search_input, options, search_input_value, initial_focus });
+    use_context_provider(|| ComboBoxContext {
+        open,
+        value,
+        set_value,
+        options,
+        list_id,
+        focus_state,
+        disabled: props.disabled,
+        placeholder: props.placeholder,
+        search_input,
+        search_input_value,
+        initial_focus
+    });
 
     rsx! {
         div {

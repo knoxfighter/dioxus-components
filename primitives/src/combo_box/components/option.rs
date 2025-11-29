@@ -72,8 +72,12 @@ pub fn ComboBoxOption<T: Clone + PartialEq + 'static>(props: ComboBoxOptionProps
     });
 
     let render = use_memo(move || {
-        let val = context.search_input_value.read().to_lowercase();
-        render() && text_value().to_lowercase().contains(&val)
+        let contains = if let Some(val) = (context.search_input_value)() {
+            text_value().to_lowercase().contains(&val.to_lowercase())
+        } else {
+            true
+        };
+        render() && contains
     });
 
     use_effect(move || {
@@ -136,7 +140,7 @@ pub fn ComboBoxOption<T: Clone + PartialEq + 'static>(props: ComboBoxOptionProps
                 onclick: move |event| {
                     if event.trigger_button() == Some(MouseButton::Primary) {
                         context.set_value.call(Some(RcPartialEqValue::new(props.value.cloned())));
-                        context.search_input_value.set(text_value.read().clone());
+                        context.search_input_value.set(None);
                         context.focus_state.blur();
                         context.open.set(false);
                     }

@@ -1,3 +1,4 @@
+use dioxus::html::textarea::placeholder;
 use dioxus::prelude::*;
 use strum::{IntoEnumIterator};
 use crate::components::combo_box::{ComboBoxGroup, ComboBoxGroupLabel, ComboBoxList, ComboBoxOption, ComboBoxOptionIndicator, ComboBoxTrigger, ComboBoxTriggerIndicator, ComboBoxTriggerInput};
@@ -37,6 +38,8 @@ pub fn Demo() -> Element {
 
     rsx! {
         ComboBox<Option<Fruit>> {
+            placeholder: "Select Fruit...",
+
             ComboBoxTrigger {
                 ComboBoxTriggerInput {}
                 ComboBoxTriggerIndicator {}
@@ -44,20 +47,7 @@ pub fn Demo() -> Element {
             ComboBoxList {
                 ComboBoxGroup {
                     ComboBoxGroupLabel { "Fruits" }
-                    ComboBoxOption::<Option<Fruit>> {
-                        index: 0usize,
-                        value: Some(Fruit::Apple),
-                        text_value: Some("Apple".to_string()),
-                        "Apple"
-                        ComboBoxOptionIndicator {}
-                    }
-                    ComboBoxOption::<Option<Fruit>> {
-                        index: 1usize,
-                        value: Some(Fruit::Banana),
-                        text_value: Some("Banana".to_string()),
-                        "Banana"
-                        ComboBoxOptionIndicator {}
-                    }
+                    {fruits}
                 }
             }
         }

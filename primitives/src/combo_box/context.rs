@@ -23,11 +23,18 @@ pub(crate) struct ComboBoxContext {
     /// The focus state for the select
     pub focus_state: FocusState,
 
+    /// Whether the combobox is disabled
+    pub disabled: ReadSignal<bool>,
+
+    /// The placeholder text
+    pub placeholder: ReadSignal<String>,
+
     /// The search input element
     pub search_input: Signal<Option<Rc<MountedData>>>,
 
     /// The value of the search input
-    pub search_input_value: Signal<String>,
+    /// If this is None, the current value will be shown
+    pub search_input_value: Signal<Option<String>>,
 
     /// The initial element to focus once the list is rendered
     pub initial_focus: Signal<Option<usize>>,
@@ -42,7 +49,7 @@ impl ComboBoxContext {
                 let options = self.options.read();
                 if let Some(option) = options.iter().find(|opt| opt.tab_index == focused_index) {
                     self.set_value.call(Some(option.value.clone()));
-                    self.search_input_value.set(option.text_value.clone());
+                    self.search_input_value.set(None);
                     self.focus_state.blur();
                     self.open.set(false);
                 }

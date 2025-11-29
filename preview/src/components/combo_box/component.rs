@@ -11,6 +11,8 @@ pub fn ComboBox<T: Clone + PartialEq + 'static>(props: ComboBoxProps<T>) -> Elem
             value: props.value,
             default_value: props.default_value,
             roving_loop: props.roving_loop,
+            disabled: props.disabled,
+            placeholder: props.placeholder,
             attributes: props.attributes,
             {props.children}
         }
