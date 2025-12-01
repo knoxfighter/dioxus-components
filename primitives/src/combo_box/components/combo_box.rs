@@ -27,9 +27,18 @@ pub struct ComboBoxProps<T: Clone + PartialEq + 'static = String> {
     #[props(default)]
     pub disabled: ReadSignal<bool>,
 
+    /// Name of the combobox for form submission
+    #[props(default)]
+    pub name: ReadSignal<String>,
+
     /// Optional placeholder text
     #[props(default = ReadSignal::new(Signal::new(String::from("Select an option"))))]
     pub placeholder: ReadSignal<String>,
+
+    /// Whether an empty value is allowed.
+    /// Make sure to set a default value, else the ComboBox still allows an empty value.
+    #[props(default = ReadSignal::new(Signal::new(true)))]
+    pub allow_empty_value: ReadSignal<bool>,
 
     /// Whether focus should loop around when reaching the end.
     #[props(default = ReadSignal::new(Signal::new(true)))]
@@ -71,7 +80,7 @@ pub fn ComboBox<T: Clone + PartialEq + 'static>(props: ComboBoxProps<T>) -> Elem
         }
     });
     let options = use_signal(Vec::default);
-    let mut search_input_value = use_signal(|| None);
+    let search_input_value = use_signal(|| None);
     let initial_focus = use_signal(|| None);
 
     use_context_provider(|| ComboBoxContext {
@@ -82,10 +91,12 @@ pub fn ComboBox<T: Clone + PartialEq + 'static>(props: ComboBoxProps<T>) -> Elem
         list_id,
         focus_state,
         disabled: props.disabled,
+        name: props.name,
         placeholder: props.placeholder,
         search_input,
         search_input_value,
-        initial_focus
+        initial_focus,
+        allow_empty_value: props.allow_empty_value,
     });
 
     rsx! {

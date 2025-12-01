@@ -26,6 +26,9 @@ pub(crate) struct ComboBoxContext {
     /// Whether the combobox is disabled
     pub disabled: ReadSignal<bool>,
 
+    /// Name of the combobox for form submission
+    pub name: ReadSignal<String>,
+
     /// The placeholder text
     pub placeholder: ReadSignal<String>,
 
@@ -38,6 +41,9 @@ pub(crate) struct ComboBoxContext {
 
     /// The initial element to focus once the list is rendered
     pub initial_focus: Signal<Option<usize>>,
+
+    /// Whether an empty value is allowed.
+    pub allow_empty_value: ReadSignal<bool>,
 }
 
 impl ComboBoxContext {

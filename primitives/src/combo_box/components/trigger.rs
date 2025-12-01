@@ -71,13 +71,16 @@ pub fn ComboBoxTriggerInput(props: ComboBoxTriggerInputProps) -> Element {
 
     rsx! {
         input {
-            r#type: "text",
+            type: "text",
             placeholder: context.placeholder.cloned(),
             value: display_value(),
+            name: context.name.cloned(),
+            disabled: context.disabled.cloned(),
+
             oninput: move |event| {
                 open.set(true);
                 let val = event.value();
-                if val.is_empty() {
+                if val.is_empty() && (context.allow_empty_value)() {
                     context.set_value.call(None);
                 }
                 value.set(Some(event.value()));
@@ -157,6 +160,9 @@ pub fn ComboBoxTriggerIndicator() -> Element {
                 event.stop_propagation();
             },
             onclick: move |_| async move {
+                if (context.disabled)() {
+                    return;
+                }
                 open.toggle();
                 if let Some(input) = search_input() {
                     input.set_focus(true).await.ok();
