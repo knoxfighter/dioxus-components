@@ -134,3 +134,15 @@
   margin-left: auto;
   color: var(--secondary-color-5);
 }
+
+.dx-combobox-group-label {
+  padding: 4px 12px;
+  color: var(--secondary-color-5);
+  font-size: 0.75rem;
+}
+
+.dx-combobox-group[data-disabled="true"] .dx-combobox-group-label {
+  color: var(--secondary-color-5);
+  opacity: 0.5;
+  pointer-events: none;
+}

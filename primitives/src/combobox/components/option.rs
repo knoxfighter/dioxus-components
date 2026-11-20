@@ -3,6 +3,7 @@
 use dioxus::prelude::*;
 
 use super::super::context::ComboboxContext;
+use crate::combobox::context::ComboboxGroupContext;
 use crate::{
     collection::{collection_item, use_item},
     listbox::{ListboxContext, ListboxItemIndicator},
@@ -10,6 +11,7 @@ use crate::{
         pointer_select_cancel, pointer_select_commit, pointer_select_start, use_selectable_option,
         RcPartialEqValue, SelectableOptionConfig,
     },
+    use_effect_cleanup,
 };
 
 /// Props for [`ComboboxOption`].
@@ -55,10 +57,11 @@ pub fn ComboboxOption<T: PartialEq + Clone + 'static>(props: ComboboxOptionProps
     let index = props.index;
 
     let mut ctx: ComboboxContext = use_context();
+    let mut groupCtx: Option<ComboboxGroupContext> = try_use_context();
     let visible = move || ctx.is_visible(index());
     let option = use_selectable_option(
         ctx.selectable,
-        None,
+        groupCtx.map(|g| g.selectable),
         SelectableOptionConfig {
             id: props.id,
             index,
@@ -75,6 +78,30 @@ pub fn ComboboxOption<T: PartialEq + Clone + 'static>(props: ComboboxOptionProps
             .hidden(move || !visible())
             .selected(move || (option.selected)()),
     );
+
+    // add this option to its group
+    let mut previous_id: Signal<Option<String>> = use_signal(|| None);
+    use_effect(move || {
+        if let Some(mut groupCtx) = groupCtx {
+            let option_id = (option.id)();
+            let stale_id = previous_id.peek().clone();
+            if let Some(stale_id) = stale_id {
+                if stale_id != option_id {
+                    groupCtx.remove_option(&stale_id);
+                }
+            }
+            groupCtx.update_option(&option_id, index());
+            previous_id.set(Some(option_id));
+        }
+    });
+
+    use_effect_cleanup(move || {
+        if let Some(mut groupCtx) = groupCtx {
+            if let Some(option_id) = previous_id.peek().as_deref() {
+                groupCtx.remove_option(option_id);
+            }
+        }
+    });
 
     let render = use_context::<ListboxContext>().render;
 

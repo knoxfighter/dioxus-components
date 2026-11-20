@@ -1,6 +1,6 @@
 //! Shared state for the combobox component.
 
-use crate::selectable::{OptionState, SelectableContext};
+use crate::selectable::{OptionState, SelectableContext, SelectableGroupContext};
 use dioxus::prelude::*;
 
 /// The default case-insensitive substring filter.
@@ -90,5 +90,62 @@ impl ComboboxContext {
 
     pub fn select_focused(&mut self) {
         self.selectable.select_focused();
+    }
+}
+
+/// Context for combobox group components
+#[derive(Clone, Copy)]
+pub(super) struct ComboboxGroupContext {
+    /// the selectable context
+    pub selectable: SelectableGroupContext,
+
+    /// ID of the element that labels this group
+    pub labeled_by: Signal<Option<String>>,
+
+    /// List of IDs and tab_indices of the options that are children of this group.
+    pub options: Signal<Vec<(String, usize)>>,
+}
+
+impl ComboboxGroupContext {
+    pub(crate) fn update_option(&mut self, id: &String, index: usize) {
+        let existing = self
+            .options
+            .peek()
+            .iter()
+            .find(|(option_id, _)| option_id == id)
+            .map(|(_, option_index)| *option_index);
+
+        // let t = self.options.peek().iter().find(|(option_id, _)| option_id == id);
+        // let t = self.options.peek().iter().position(|(option_id, _)| option_id == id);
+
+        if existing == Some(index) {
+            return;
+        }
+
+        let mut options = self.options.write();
+
+        if let Some(entry) = options.iter_mut().find(|(option_id, _)| option_id == id) {
+            entry.1 = index;
+        } else {
+            options.push((id.clone(), index));
+        }
+    }
+
+    pub(crate) fn remove_option(&mut self, id: &str) {
+        if !self
+            .options
+            .peek()
+            .iter()
+            .any(|(option_id, _)| option_id == id)
+        {
+            return;
+        }
+
+        self.options
+            .write()
+            .retain(|(option_id, _)| option_id != id);
+        self.options
+            .write()
+            .retain(|(option_id, _)| option_id != id);
     }
 }

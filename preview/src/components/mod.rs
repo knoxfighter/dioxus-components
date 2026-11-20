@@ -181,7 +181,7 @@ examples!(
     checkbox,
     collapsible,
     color_picker,
-    combobox[controlled, disabled, dynamic],
+    combobox[controlled, disabled, dynamic, groups],
     context_menu,
     date_picker[internationalized, range, multi_month, unavailable_dates],
     dialog,

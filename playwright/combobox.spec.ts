@@ -281,3 +281,26 @@ test("touch selection commits and closes", async ({ browser, browserName }) => {
         await context.close();
     }
 });
+
+test("group hides with their children", async ({ page }) => {
+    await page.goto(URL, { timeout: 20 * 60 * 1000 });
+    const trigger = page.getByRole("combobox", { name: "Select food" });
+    await trigger.click();
+
+    const fruits = page.locator("[role='group']").filter({ hasText: "Fruits" });
+    const vegetables = page.locator("[role='group']").filter({ hasText: "Vegetables" });
+    await expect(fruits).toBeVisible();
+    await expect(vegetables).toBeVisible();
+
+    await trigger.fill("apple");
+    await expect(fruits).toBeVisible();
+    await expect(vegetables).toBeHidden();
+
+    await trigger.fill("carrot");
+    await expect(fruits).toBeHidden();
+    await expect(vegetables).toBeVisible();
+
+    await trigger.fill("");
+    await expect(fruits).toBeVisible();
+    await expect(vegetables).toBeVisible();
+});

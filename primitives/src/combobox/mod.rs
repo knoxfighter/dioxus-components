@@ -7,7 +7,8 @@ mod components;
 mod context;
 
 pub use components::{
-    Combobox, ComboboxEmpty, ComboboxEmptyProps, ComboboxInput, ComboboxInputProps,
+    Combobox, ComboboxEmpty, ComboboxEmptyProps, ComboboxGroup, ComboboxGroupLabel,
+    ComboboxGroupLabelProps, ComboboxGroupProps, ComboboxInput, ComboboxInputProps,
     ComboboxItemIndicator, ComboboxItemIndicatorProps, ComboboxList, ComboboxListProps,
     ComboboxOption, ComboboxOptionProps, ComboboxProps,
 };

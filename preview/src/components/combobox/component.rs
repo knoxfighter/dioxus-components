@@ -1,8 +1,6 @@
 use dioxus::prelude::*;
 use dioxus_icons::lucide::{Check, ChevronsUpDown};
-use dioxus_primitives::combobox::{
-    self, default_combobox_filter, ComboboxEmptyProps, ComboboxOptionProps,
-};
+use dioxus_primitives::combobox::{self, default_combobox_filter, ComboboxEmptyProps, ComboboxGroupLabelProps, ComboboxGroupProps, ComboboxOptionProps};
 use dioxus_primitives::{dioxus_attributes::attributes, merge_attributes};
 
 #[css_module("/src/components/combobox/style.css")]
@@ -108,6 +106,36 @@ pub fn ComboboxEmpty(props: ComboboxEmptyProps) -> Element {
 
     rsx! {
         combobox::ComboboxEmpty {
+            attributes: merged,
+            {props.children}
+        }
+    }
+}
+
+#[component]
+pub fn ComboboxGroup(props: ComboboxGroupProps) -> Element {
+    let base = attributes!(div { class: Styles::dx_combobox_group });
+    let merged = merge_attributes(vec![base, props.attributes]);
+
+    rsx! {
+        combobox::ComboboxGroup {
+            id: props.id,
+            disabled: props.disabled,
+
+            attributes: merged,
+            {props.children}
+        }
+    }
+}
+
+#[component]
+pub fn ComboboxGroupLabel(props: ComboboxGroupLabelProps) -> Element {
+    let base = attributes!(div { class: Styles::dx_combobox_group_label });
+    let merged = merge_attributes(vec![base, props.attributes]);
+
+    rsx! {
+        combobox::ComboboxGroupLabel {
+            id: props.id,
             attributes: merged,
             {props.children}
         }
